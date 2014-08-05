@@ -15,8 +15,6 @@
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-var blobRecorded = false;
-var savedWAVBlob = null;
 var audioContext = new AudioContext();
 var audioInput = null,
     realAudioInput = null,
@@ -42,9 +40,9 @@ function saveAudio() {
 }
 
 function gotBuffers( buffers ) {
-    // var canvas = document.getElementById( "wavedisplay" );
+    var canvas = document.getElementById( "wavedisplay" );
 
-    // drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
+    drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
 
     // the ONLY time gotBuffers is called is right after a new recording is completed - 
     // so here's where we should set up the download.
@@ -52,18 +50,12 @@ function gotBuffers( buffers ) {
 }
 
 function doneEncoding( blob ) {
-    savedWAVBlob = blob;
-    blobRecorded = true;
+    var player = new window.Audio();
+    player.src = window.URL.createObjectURL(blob);
+    player.play();
+    console.log("done encoding");
     Recorder.setupDownload( blob, "myRecording" + ((recIndex<10)?"0":"") + recIndex + ".wav" );
     recIndex++;
-}
-
-function playback( e ) {
-    if (blobRecorded) {
-      var player = new window.Audio();
-      player.src = window.URL.createObjectURL(savedWAVBlob);
-      player.play();
-    }
 }
 
 function toggleRecording( e ) {
@@ -176,7 +168,7 @@ function gotStream(stream) {
     zeroGain.gain.value = 0.0;
     inputPoint.connect( zeroGain );
     zeroGain.connect( audioContext.destination );
-    // updateAnalysers();
+    updateAnalysers();
 }
 
 function initAudio() {

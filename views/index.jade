@@ -2,6 +2,9 @@ block content
     h1= title
     p Time to record that earworm!
 
-    <a href="">Record</a>
-    <a href="" onclick="toggleRecording(this)">Play</a>
+    <div id="record" onclick="toggleRecording(this)" id="record">Click to Record</a> </div>
+    <div id="playback" onclick="playback(this)" id="play">Click to Play</a> </div>
+
+    button#btnAddUser Add Earworm
+
 extends layout
